@@ -17,7 +17,7 @@ void Sender::bitssendung(std::string Package) {
     uint8_t outputMask = isFirstPeer ? 0x0F : 0xF0;
     sendWithLock(outputMask, false);
     sendWithLock(Flag_bits, true);
-    // sendWithLock(static_cast<uint8_t> (FrameType::DATA), true);
+    sendWithLock(DATA_TYPE, true);
 
     for (char zeichen : Package) {
         sendWithLock(zeichen >> 4, true);

@@ -56,23 +56,7 @@ void Receiver::handleFrame() {
         return;
     }
 
-    uint8_t typeBits = readBits();
     std::cout << readFrame();
-
-    // switch (typeBits) {
-    //     case FrameType::DATA:
-    //         std::cout << readFrame();
-    //         break;
-    //     case FrameType::ACK:
-    //         handleAckFrame();
-    //         break;
-    //     case FrameType::NACK:
-    //         handleNackFrame();
-    //         break;
-    //     default:
-    //         std::cerr << "Unknown frame type "  << std::hex << static_cast<int> (typeBits) << std::endl;
-    //         break;
-    // }
 }
 
 void Receiver::handleAckFrame() {
