@@ -13,6 +13,7 @@
 #include "RPiDriver.h"
 #include <condition_variable>
 #include <cstdint>
+#include "Config.h"
 
 class Receiver {
 private:
@@ -22,7 +23,8 @@ private:
     int frameCounter;
 
     uint8_t readBits();
-    std::string readFrame();
+    void readFrame();
+    std::string readDataFrame();
     bool checkFileReceived();
     std::array <std::string,15> completed_Frames={};
 

@@ -13,6 +13,7 @@
 #include "package_vector.h"
 #include "RPiDriver.h"
 #include "FrameTypes.h"
+#include "Config.h"
 
 class Sender {
 private:

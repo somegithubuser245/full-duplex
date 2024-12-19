@@ -51,12 +51,13 @@ void Receiver::monitor() {
 void Receiver::handleFrame() {
     uint8_t flag = readBits();
 
-    if (flag != 0x0F && flag != 0x0E) {
-        std::cerr << "Invalid flag pattern: " << std::hex << static_cast<int>(flag) << std::endl;
-        return;
+    if (flag == 0x0F) {
+        readFrame();
+    } else {
+        // std::cerr << "Unexpected data\n";
     }
 
-    std::cout << readFrame();
+    
 }
 
 void Receiver::handleAckFrame() {
@@ -67,12 +68,31 @@ void Receiver::handleNackFrame() {
     std::cerr << "Nacknowledgment frame incoming" << std::endl;
 }
 
-std::string Receiver::readFrame()
+void Receiver::readFrame()
 {   
+    const uint8_t type = readBits();
+
+    switch(type) {
+        case DATA_TYPE:
+            std::cout << readDataFrame();
+            break;
+        case ACK_TYPE:
+            handleAckFrame();
+            break;
+        case NACK_TYPE:
+            handleNackFrame();
+            break;
+        default:
+            // std::cerr << "Unknown type of frame!\n";
+            break;
+    }
+}
+
+std::string Receiver::readDataFrame() {
     std::string data;
     data.reserve(8);
 
-    for(int i = 0; i < 8; i++) {
+    for(int i = 0; i < PACKAGE_SIZE; i++) {
         uint8_t upper = readBits();
         uint8_t lower = readBits();
 

@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    RPiDriver drv; // Singleton instance
+    RPiDriver drv(isFirstPeer); // Singleton instance
     
     // Set DDRA based on peer type
     if (isFirstPeer) {

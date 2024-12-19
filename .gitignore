@@ -1,2 +1,5 @@
 /pigpio-master
 *.o
+
+received.txt
+input.txt

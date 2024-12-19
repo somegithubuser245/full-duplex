@@ -10,11 +10,14 @@ private:
     static const int INPUT_SHIFT = 20;
     static const uint32_t OUTPUT_MASK = 0xF000000;
     static const int OUTPUT_SHIFT = 20;
+    int shiftRead, shiftWrite;
+    bool firstPeer;
 
 public:
-    RPiDriver();
+    RPiDriver(bool firstPeer);
     uint8_t getRegister(void*);
     void setRegister(void*, uint8_t value);
+    void setGPIO(bool firstPeer, bool input);
     ~RPiDriver();
 };
 
