@@ -12,17 +12,16 @@
 #include <condition_variable>
 #include <cstdint>
 #include "package_vector.h"
-#include "RPiDriver.h"
 #include "Config.h"
+#include "Generaldriver.h"
 
 class Receiver {
 private:
-    RPiDriver &drv;
+    GeneralDriver &gdrv;
     bool fileFullyReceived;
     bool lastChunk;
     int frameCounter;
 
-    uint8_t readBits();
     void readFrame();
     std::string readDataFrame();
     bool checkFileReceived();
@@ -37,7 +36,7 @@ private:
     void handleAckFrame();
     void handleNackFrame();
 public:
-    Receiver(RPiDriver &drv);
+    Receiver(GeneralDriver &gdrv);
     bool checkFlag();
     void monitor();
     void losed_packages_receive();

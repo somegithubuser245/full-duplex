@@ -1,32 +1,26 @@
 #include "headers/Sender.h"
 #include "headers/Checksum.h"
 
-extern std::mutex b15f_mutex;
-extern std::condition_variable cv;
-extern bool isSenderActive;
-extern bool isReceiverActive;
-extern std::array<bool, 16> lostPackages; 
-
 extern bool isFirstPeer;
 
-Sender::Sender(RPiDriver &drv, std::string Datei) : drv(drv), Datei(Datei) {
+Sender::Sender(GeneralDriver &gdrv, std::string Datei) : gdrv(gdrv), Datei(Datei) {
     Package_counter = 0;
     Packege_teilung();
 }
 
 void Sender::bitssendung(std::string Package) {
-    uint8_t outputMask = isFirstPeer ? 0x0F : 0xF0;
+    // uint8_t outputMask = isFirstPeer ? 0x0F : 0xF0;
     // sendWithLock(outputMask, false); this is useless and leads to bugs when using RPi!
-    sendWithLock(Flag_bits, true);
-    sendWithLock(DATA_TYPE, true);
+    gdrv.sendWithLock(Flag_bits, true);
+    gdrv.sendWithLock(DATA_TYPE, true);
 
     for (char zeichen : Package) {
-        sendWithLock(zeichen >> 4, true);
-        sendWithLock(zeichen, true);
+        gdrv.sendWithLock(zeichen >> 4, true);
+        gdrv.sendWithLock(zeichen, true);
     }
 
-    sendWithLock(static_cast<uint8_t>(Package_counter), true);
-    sendWithLock(0x0, true); //clear last bits
+    gdrv.sendWithLock(static_cast<uint8_t>(Package_counter), true);
+    gdrv.sendWithLock(0x0, true); //clear last bits
     // std::cerr << "Reset PORTA after sending." << std::endl;
     Package_counter++;
 }
@@ -43,7 +37,7 @@ void Sender::Packege_teilung() {
         }
         // std::move reallocates memory (не надо копировать и вставлять чанк)
         Packages.push_back(std::move(chunk));
-        std::cerr << chunk << std::endl;
+        // std::cerr << chunk << std::endl;
     }
 }
 
@@ -59,25 +53,6 @@ void Sender::Package_sendung() {
 
 void Sender::last_package() {
     bitssendung(completePackage(Packages[Packages.size() - 1]));
-}
-
-void Sender::sendWithLock(uint8_t data, bool portA) {
-    std::unique_lock<std::mutex> lock(b15f_mutex);
-    cv.wait(lock, []{ return isSenderActive; });
-
-    if (portA) {
-        if (isFirstPeer) {
-            drv.setRegister(nullptr, data & 0x0F);
-        } else {
-            drv.setRegister(nullptr, (data << 4) & 0xF0);
-        }
-    } else {
-        drv.setRegister(nullptr, data);
-    }
-    
-    isSenderActive = false;
-    isReceiverActive = true;
-    cv.notify_all();
 }
 
 std::string Sender::completePackage(std::string package) {

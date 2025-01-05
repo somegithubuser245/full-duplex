@@ -6,7 +6,7 @@ LDFLAGS = -lpigpio -lrt -lstdc++
 TARGET = comm_program
 
 # Source files
-SOURCES = main.cpp Sender.cpp receiver.cpp RPiDriver.cpp Checksum.cpp
+SOURCES = main.cpp Sender.cpp receiver.cpp RPiDriver.cpp Checksum.cpp Generaldriver.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Build rules

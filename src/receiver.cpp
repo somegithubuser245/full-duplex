@@ -2,40 +2,13 @@
 #include "headers/FrameTypes.h"
 #include "headers/Checksum.h"
 
-extern std::mutex b15f_mutex;
-extern std::condition_variable cv;
-extern bool isSenderActive;
-extern bool isReceiverActive;
-extern std::array<bool, 16> lostPackages; 
-
 extern bool isFirstPeer;
 
 std::string fullFrame= "";
 
-Receiver::Receiver(RPiDriver &drv) : drv(drv) {
+Receiver::Receiver(GeneralDriver &gdrv) : gdrv(gdrv) {
     fileFullyReceived = false;
     frameCounter = 0;
-    lostPackages.fill(false);
-}
-
-uint8_t Receiver::readBits() {
-    std::unique_lock<std::mutex> lock(b15f_mutex);
-    cv.wait(lock, [] { return isReceiverActive; });
-    uint8_t bits;
-
-    if (isFirstPeer) {
-        bits = drv.getRegister(nullptr) >> 4;
-    } else {
-        bits = drv.getRegister(nullptr) & 0x0F;
-    }
-
-    std::cerr << "Read bits: " << std::bitset<4>(bits) << std::endl;  // keep for debugging
-
-    isReceiverActive = false;
-    isSenderActive = true;
-    cv.notify_all();
-
-    return bits;
 }
 
 
@@ -50,7 +23,7 @@ void Receiver::monitor() {
 }
 
 void Receiver::handleFrame() {
-    uint8_t flag = readBits();
+    uint8_t flag = gdrv.readWithLock();
 
     if (flag == 0x0F) {
         readFrame();
@@ -71,7 +44,7 @@ void Receiver::handleNackFrame() {
 
 void Receiver::readFrame()
 {   
-    const uint8_t type = readBits();
+    const uint8_t type = gdrv.readWithLock();
 
     switch(type) {
         case DATA_TYPE:
@@ -94,8 +67,8 @@ std::string Receiver::readDataFrame() {
     data.reserve(8);
 
     for(int i = 0; i < PACKAGE_SIZE; i++) {
-        uint8_t upper = readBits();
-        uint8_t lower = readBits();
+        uint8_t upper = gdrv.readWithLock();
+        uint8_t lower = gdrv.readWithLock();
 
         char c = (upper << 4) | lower;
         data.push_back(c);
@@ -103,23 +76,21 @@ std::string Receiver::readDataFrame() {
 
     uint16_t receivedChecksum = receiveChecksum();
 
-    uint8_t packageNumber = readBits();
+    uint8_t packageNumber = gdrv.readWithLock();
 
     uint16_t calculatedChecksum = Checksum::crc16(data);
 
     if (calculatedChecksum != receivedChecksum) {
-        std::cerr << "Checksum mismatch! Calculated: " << std::hex << calculatedChecksum
-                  << ", Received: " << std::hex << receivedChecksum << std::endl; // Handle checksum error (e.g., request retransmission or discard the frame)
-        lostPackages[packageNumber] = true;
+        // std::cerr << "Checksum mismatch! Calculated: " << std::hex << calculatedChecksum
+                //   << ", Received: " << std::hex << receivedChecksum << std::endl;
     } else {
-        std::cerr << "Checksum OK." << std::endl;
-        completed_Frames[packageNumber]=data;
+        // std::cerr << "Checksum OK." << std::endl;
     }
 
     fullFrame += data;
-    std::cerr<< "Receiver Package Number: " << static_cast<int>(packageNumber) << std::endl;
-    std::cerr << "Received data: " << data << std::endl;
-    std::cerr<< "Received Frame: "<< fullFrame <<std::endl;
+    // std::cerr<< "Receiver Package Number: " << static_cast<int>(packageNumber) << std::endl;
+    // std::cerr << "Received data: " << data << std::endl;
+    // std::cerr<< "Received Frame: "<< fullFrame <<std::endl;
 
     frameCounter++;
 
@@ -131,12 +102,12 @@ std::string Receiver::readDataFrame() {
 }
 
 uint16_t Receiver::receiveChecksum() {
-    uint8_t upperHigh = readBits();
-    uint8_t upperLow = readBits();
+    uint8_t upperHigh = gdrv.readWithLock();
+    uint8_t upperLow = gdrv.readWithLock();
     uint8_t checksumHigh = (upperHigh << 4) | upperLow;
 
-    uint8_t lowerHigh = readBits();
-    uint8_t lowerLow = readBits();
+    uint8_t lowerHigh = gdrv.readWithLock();
+    uint8_t lowerLow = gdrv.readWithLock();
     uint8_t checksumLow = (lowerHigh << 4) | lowerLow;
 
     uint16_t receivedChecksum = (checksumHigh << 8) | checksumLow;

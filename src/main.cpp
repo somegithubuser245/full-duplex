@@ -8,14 +8,9 @@
 #include "headers/Sender.h"
 #include "headers/receiver.h"
 #include "headers/package_vector.h"
+#include "headers/Generaldriver.h"
 using namespace std;
 
-// Shared synchronization primitives
-std::mutex b15f_mutex;
-std::condition_variable cv;
-bool isSenderActive = true;
-bool isReceiverActive = false;
-std::array<bool, 16> lostPackages{false};
 bool isFirstPeer = false;  // Default value
 
 int main(int argc, char* argv[]) {
@@ -60,8 +55,9 @@ int main(int argc, char* argv[]) {
     }
 
     // Create Receiver and Sender objects with peer type
-    Receiver receiver(drv);
-    Sender sender(drv, text);
+    GeneralDriver gdrv(drv, isFirstPeer);
+    Receiver receiver(gdrv);
+    Sender sender(gdrv, text);
 
     // Launch sender and receiver in separate threads
     thread receiverThread([&]() {

@@ -11,13 +11,13 @@
 #include <sstream>
 #include <iomanip>
 #include "package_vector.h"
-#include "RPiDriver.h"
 #include "FrameTypes.h"
 #include "Config.h"
+#include "Generaldriver.h"
 
 class Sender {
 private:
-    RPiDriver &drv;
+    GeneralDriver &gdrv;
     std::string Datei="";
     std::vector <std::string> Packages;
     int Package_counter=0;
@@ -27,7 +27,7 @@ private:
     std::string completePackage(std::string package);
     uint8_t Flag_bits;
 public:
-    Sender(RPiDriver &drv,std::string Datei);
+    Sender(GeneralDriver &gdrv, std::string Datei);
     void PackageNumber_send(std::unique_lock<std::mutex>& lock);
     void Flag(std::unique_lock<std::mutex>& lock);
     void bitssendung(std::string Package);
