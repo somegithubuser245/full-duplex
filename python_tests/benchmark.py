@@ -28,7 +28,7 @@ def run_benchmark(size_kb):
     start_time = time.time()
     
     # Run the protocol
-    os.system(f"cat {input_file} | sudo ./comm_program -f > {output_file}")
+    os.system(f"cat {input_file} | sudo ../src/comm_program -f > {output_file}")
     
     # Record end time
     end_time = time.time()

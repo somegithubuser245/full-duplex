@@ -5,9 +5,9 @@
 #include <mutex>
 #include <condition_variable>
 #include <cstring>
-#include "Sender.h"
-#include "receiver.h"
-#include "package_vector.h"
+#include "headers/Sender.h"
+#include "headers/receiver.h"
+#include "headers/package_vector.h"
 using namespace std;
 
 // Shared synchronization primitives

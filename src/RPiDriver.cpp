@@ -1,4 +1,4 @@
-#include "RPiDriver.h"
+#include "headers/RPiDriver.h"
 #include <iostream>
 #include <bitset>
 
@@ -44,8 +44,8 @@ uint8_t RPiDriver::getRegister(void*) {
     uint8_t value = ((bank >> shiftRead));
     
     
-    std::cerr << "Raw bank read: 0b" << std::bitset<32>(bank) << std::endl;
-    std::cerr << "After mask and shift: 0b" << std::bitset<8>(value) << std::endl;
+    // std::cerr << "Raw bank read: 0b" << std::bitset<32>(bank) << std::endl;
+    // std::cerr << "After mask and shift: 0b" << std::bitset<8>(value) << std::endl;
     
     return value;
 }
@@ -59,8 +59,8 @@ void RPiDriver::setRegister(void*, uint8_t value) {
     uint32_t shifted_value = ((uint32_t)(value)) << shiftWrite;  // Shift to position 24-27
 
     
-    std::cerr << "Writing value: 0b" << std::bitset<8>(value) << std::endl;
-    std::cerr << "Output to pins: 0b" << std::bitset<32>(shifted_value) << std::endl;
+    // std::cerr << "Writing value: 0b" << std::bitset<8>(value) << std::endl;
+    // std::cerr << "Output to pins: 0b" << std::bitset<32>(shifted_value) << std::endl;
     
     gpioWrite_Bits_0_31_Set(shifted_value);
     // gpioWrite_Bits_0_31_Clear(0xF << shiftWrite);
