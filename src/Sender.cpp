@@ -1,4 +1,5 @@
 #include "headers/Sender.h"
+#include "headers/Checksum.h"
 
 extern std::mutex b15f_mutex;
 extern std::condition_variable cv;
@@ -28,31 +29,6 @@ void Sender::bitssendung(std::string Package) {
     sendWithLock(0x0, true); //clear last bits
     // std::cerr << "Reset PORTA after sending." << std::endl;
     Package_counter++;
-}
-
-
-uint16_t Sender::crc16(const std::string &data)
-{
-    uint16_t crc = 0xFFFF;
-    for (size_t i = 0; i < data.size(); ++i)
-    {
-        crc ^= static_cast<uint8_t>(data[i]) << 8;
-        for (int j = 0; j < 8; ++j)
-        {
-            if (crc & 0x8000)
-                crc = (crc << 1) ^ 0x1021; // Polynomial used in CRC16-CCITT
-            else
-                crc <<= 1;
-        }
-    }
-    return crc;
-}
-
-std::string Sender::crc16_to_string(uint16_t crc)
-{
-    std::stringstream ss;
-    ss << std::hex << std::uppercase << std::setfill('0') << std::setw(4) << crc;
-    return ss.str();
 }
 
 void Sender::Packege_teilung() {
@@ -99,13 +75,13 @@ void Sender::sendWithLock(uint8_t data, bool portA) {
         drv.setRegister(nullptr, data);
     }
     
-    isSenderActive = false; isSenderActive = false;
+    isSenderActive = false;
     isReceiverActive = true;
     cv.notify_all();
 }
 
 std::string Sender::completePackage(std::string package) {
-    uint16_t checksum = crc16(package);
+    uint16_t checksum = Checksum::crc16(package);
     // Convert checksum to two bytes
     char highByte = (checksum >> 8) & 0xFF;
     char lowByte = checksum & 0xFF;

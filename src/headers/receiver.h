@@ -9,10 +9,10 @@
 #include <vector>
 #include <mutex>
 #include <array>
-#include "package_vector.h"
-#include "RPiDriver.h"
 #include <condition_variable>
 #include <cstdint>
+#include "package_vector.h"
+#include "RPiDriver.h"
 #include "Config.h"
 
 class Receiver {

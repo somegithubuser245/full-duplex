@@ -1,5 +1,6 @@
 #include "headers/receiver.h"
 #include "headers/FrameTypes.h"
+#include "headers/Checksum.h"
 
 extern std::mutex b15f_mutex;
 extern std::condition_variable cv;
@@ -104,7 +105,7 @@ std::string Receiver::readDataFrame() {
 
     uint8_t packageNumber = readBits();
 
-    uint16_t calculatedChecksum = crc16(data);
+    uint16_t calculatedChecksum = Checksum::crc16(data);
 
     if (calculatedChecksum != receivedChecksum) {
         std::cerr << "Checksum mismatch! Calculated: " << std::hex << calculatedChecksum
@@ -141,26 +142,6 @@ uint16_t Receiver::receiveChecksum() {
     uint16_t receivedChecksum = (checksumHigh << 8) | checksumLow;
 
     return receivedChecksum;
-}
-
-uint16_t Receiver::crc16(const std::string& data) {
-    uint16_t crc = 0xFFFF;
-    for (size_t i = 0; i < data.size(); ++i) {
-        crc ^= static_cast<uint8_t>(data[i]) << 8;
-        for (int j = 0; j < 8; ++j) {
-            if (crc & 0x8000)
-                crc = (crc << 1) ^ 0x1021;  // Polynomial used in CRC16-CCITT
-            else
-                crc <<= 1;
-        }
-    }
-    return crc;
-}
-
-std::string Receiver::crc16_to_string(uint16_t crc) {
-    std::stringstream ss;
-    ss << std::hex << std::uppercase << std::setfill('0') << std::setw(4) << crc;
-    return ss.str();
 }
 
 std::string Receiver::checkZeros(std::string data) {
