@@ -1,25 +1,24 @@
-CXX = g++
-CXXFLAGS = -Wall -pthread
-LDFLAGS = -lpigpio -lrt -lstdc++
+COMPILER_PATH = g++
 
-# Target executable name
-TARGET = comm_program
+# Options
+CFLAGS   = -std=c++17 -O3 -Wall -Wextra
+LDFLAGS  = -lb15fdrv
+OBJECTS  = main.o Sender.o receiver.o Generaldriver.o Checksum.o
+OUT      = main.elf
 
-# Source files
-SOURCES = main.cpp Sender.cpp receiver.cpp RPiDriver.cpp Checksum.cpp Generaldriver.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
+COMPILE = $(COMPILER_PATH) $(CFLAGS)
 
-# Build rules
-all: $(TARGET)
+main: $(OBJECTS)
+	$(COMPILE) $(OBJECTS) -o $(OUT) $(LDFLAGS)
 
-$(TARGET): $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $(TARGET) $(LDFLAGS)
-
-# Pattern rule for object files
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
+help:
+	@echo "This Makefile has the following targets:"
+	@echo "make main .... to compile"
+	@echo "make clean ... to delete objects and executables"
+	
 clean:
-	rm -f $(OBJECTS) $(TARGET)
+	@echo "Cleaning..."
+	rm -f $(OBJECTS) $(OUT) *.bin gnuplotscript.gp
 
-.PHONY: all clean
+.cpp.o:
+	$(COMPILE) -c $< -o $@

@@ -20,15 +20,9 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    RPiDriver drv(isFirstPeer); // Singleton instance
+    // RPiDriver drv(isFirstPeer); // Singleton instance
+    B15F &drv = B15F::getInstance();
     
-    // Set DDRA based on peer type
-    if (isFirstPeer) {
-        drv.setRegister(nullptr, 0x0F);  // First 4 bits for reading, last 4 for writing
-    } else {
-        drv.setRegister(nullptr, 0xF0);  // First 4 bits for writing, last 4 for reading
-    }
-
     std::string text;
     if (argc > 1 && strcmp(argv[1], "-f") != 0 && strcmp(argv[1], "-s") != 0) {
         // If a filename is provided, read from the file
@@ -52,7 +46,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Create Receiver and Sender objects with peer type
-    GeneralDriver gdrv(drv, isFirstPeer);
+    GeneralDriver gdrv(isFirstPeer, drv);
     Receiver receiver(gdrv);
     Sender sender(gdrv, text);
 

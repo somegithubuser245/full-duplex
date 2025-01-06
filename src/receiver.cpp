@@ -26,9 +26,10 @@ void Receiver::handleFrame() {
     uint8_t flag = gdrv.readWithLock();
 
     if (flag == 0x0F) {
+        std::cerr << "FLAG HIT\n";
         readFrame();
     } else {
-        // std::cerr << "Unexpected data\n";
+        std::cerr << "Unexpected data\n";
     }
 
     
@@ -47,13 +48,14 @@ void Receiver::readFrame()
     const uint8_t type = gdrv.readWithLock();
 
     switch(type) {
-        case DATA_TYPE:
+        case DATA:
+            std::cerr << "DATA TYPE HIT\n";
             std::cout << readDataFrame();
             break;
-        case ACK_TYPE:
+        case ACK:
             handleAckFrame();
             break;
-        case NACK_TYPE:
+        case NACK:
             handleNackFrame();
             break;
         default:
@@ -63,8 +65,9 @@ void Receiver::readFrame()
 }
 
 std::string Receiver::readDataFrame() {
+    std::cerr << "trying to read data!\n";
     std::string data;
-    data.reserve(8);
+    data.reserve(PACKAGE_SIZE);
 
     for(int i = 0; i < PACKAGE_SIZE; i++) {
         uint8_t upper = gdrv.readWithLock();
@@ -81,16 +84,16 @@ std::string Receiver::readDataFrame() {
     uint16_t calculatedChecksum = Checksum::crc16(data);
 
     if (calculatedChecksum != receivedChecksum) {
-        // std::cerr << "Checksum mismatch! Calculated: " << std::hex << calculatedChecksum
-                //   << ", Received: " << std::hex << receivedChecksum << std::endl;
+        std::cerr << "Checksum mismatch! Calculated: " << std::hex << calculatedChecksum
+                  << ", Received: " << std::hex << receivedChecksum << std::endl;
     } else {
-        // std::cerr << "Checksum OK." << std::endl;
+        std::cerr << "Checksum OK." << std::endl;
     }
 
     fullFrame += data;
-    // std::cerr<< "Receiver Package Number: " << static_cast<int>(packageNumber) << std::endl;
-    // std::cerr << "Received data: " << data << std::endl;
-    // std::cerr<< "Received Frame: "<< fullFrame <<std::endl;
+    std::cerr<< "Receiver Package Number: " << static_cast<int>(packageNumber) << std::endl;
+    std::cerr << "Received data: " << data << std::endl;
+    std::cerr<< "Received Frame: "<< fullFrame <<std::endl;
 
     frameCounter++;
 

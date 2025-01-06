@@ -18,6 +18,8 @@ private:
     bool Frame_sended=false;
     std::string completePackage(std::string package);
     uint8_t Flag_bits;
+
+    void sync();
 public:
     Sender(GeneralDriver &gdrv, std::string Datei);
     void PackageNumber_send(std::unique_lock<std::mutex>& lock);

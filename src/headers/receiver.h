@@ -31,6 +31,7 @@ private:
     void handleFrame();
     void handleAckFrame();
     void handleNackFrame();
+    void sync();
 public:
     Receiver(GeneralDriver &gdrv);
     bool checkFlag();

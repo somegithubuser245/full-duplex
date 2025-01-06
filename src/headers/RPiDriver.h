@@ -1,7 +1,7 @@
 #ifndef RPI_DRIVER_H
 #define RPI_DRIVER_H
 
-#include <pigpio.h>
+// #include <pigpio.h>
 #include <cstdint>  // for uint8_t, uint32_t
 
 class RPiDriver {

@@ -2,9 +2,15 @@
 #include <iostream>
 #include "headers/Generaldriver.h"
 
-GeneralDriver::GeneralDriver(RPiDriver &drv, bool isFirstPeer) : drv(drv), isFirstPeer(isFirstPeer) {
+GeneralDriver::GeneralDriver(bool isFirstPeer, B15F &drv) : isFirstPeer(isFirstPeer), drv(drv){
     isSenderActive = true;
     isReceiverActive = false;
+
+    if (isFirstPeer) {
+        drv.setRegister(&DDRA, 0x0F);  // First 4 bits for reading, last 4 for writing
+    } else {
+        drv.setRegister(&DDRA, 0xF0);  // First 4 bits for writing, last 4 for reading
+    }
 }
 
 uint8_t GeneralDriver::readWithLock() {
@@ -13,12 +19,12 @@ uint8_t GeneralDriver::readWithLock() {
     uint8_t bits;
 
     if (isFirstPeer) {
-        bits = drv.getRegister(nullptr) >> 4;
+        bits = drv.getRegister(&PINA) >> 4;
     } else {
-        bits = drv.getRegister(nullptr) & 0x0F;
+        bits = drv.getRegister(&PINA) & 0x0F;
     }
 
-    // std::cerr << "Read bits: " << std::bitset<4>(bits) << std::endl;  // keep for debugging
+     std::cerr << "Read bits: " << std::bitset<4>(bits) << std::endl;  // keep for debugging
 
     isReceiverActive = false;
     isSenderActive = true;
@@ -33,12 +39,12 @@ void GeneralDriver::sendWithLock(uint8_t data, bool portA) {
 
     if (portA) {
         if (isFirstPeer) {
-            drv.setRegister(nullptr, data & 0x0F);
+            drv.setRegister(&PORTA, data & 0x0F);
         } else {
-            drv.setRegister(nullptr, (data << 4) & 0xF0);
+            drv.setRegister(&PORTA, (data << 4) & 0xF0);
         }
     } else {
-        drv.setRegister(nullptr, data);
+        drv.setRegister(&PORTA, data);
     }
     
     isSenderActive = false;
