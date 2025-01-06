@@ -3,16 +3,10 @@
 
 #include <bitset>
 #include <iostream>
-#include <string>
 #include <vector>
-#include <mutex>
-#include <condition_variable>
 #include <cstdint>
 #include <sstream>
 #include <iomanip>
-#include "package_vector.h"
-#include "FrameTypes.h"
-#include "Config.h"
 #include "Generaldriver.h"
 
 class Sender {
@@ -22,8 +16,6 @@ private:
     std::vector <std::string> Packages;
     int Package_counter=0;
     bool Frame_sended=false;
-    uint16_t crc16(const std::string& data);
-    std::string crc16_to_string(uint16_t crc);
     std::string completePackage(std::string package);
     uint8_t Flag_bits;
 public:

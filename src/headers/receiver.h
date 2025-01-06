@@ -5,13 +5,9 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
-#include <string>
 #include <vector>
-#include <mutex>
 #include <array>
-#include <condition_variable>
 #include <cstdint>
-#include "package_vector.h"
 #include "Config.h"
 #include "Generaldriver.h"
 

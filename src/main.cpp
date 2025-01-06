@@ -2,12 +2,9 @@
 #include <fstream>
 #include <sstream>
 #include <thread>
-#include <mutex>
-#include <condition_variable>
 #include <cstring>
 #include "headers/Sender.h"
 #include "headers/receiver.h"
-#include "headers/package_vector.h"
 #include "headers/Generaldriver.h"
 using namespace std;
 

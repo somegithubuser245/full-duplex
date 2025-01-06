@@ -1,5 +1,7 @@
 #include "headers/Sender.h"
 #include "headers/Checksum.h"
+#include "headers/Config.h"
+#include "headers/FrameTypes.h"
 
 extern bool isFirstPeer;
 
@@ -11,7 +13,7 @@ Sender::Sender(GeneralDriver &gdrv, std::string Datei) : gdrv(gdrv), Datei(Datei
 void Sender::bitssendung(std::string Package) {
     // uint8_t outputMask = isFirstPeer ? 0x0F : 0xF0;
     // sendWithLock(outputMask, false); this is useless and leads to bugs when using RPi!
-    gdrv.sendWithLock(Flag_bits, true);
+    gdrv.sendWithLock(FLAG, true);
     gdrv.sendWithLock(DATA_TYPE, true);
 
     for (char zeichen : Package) {
@@ -42,8 +44,6 @@ void Sender::Packege_teilung() {
 }
 
 void Sender::Package_sendung() {
-    Flag_bits = 0x0F;
-
     for (int i = 0; i < Packages.size() - 1; i++) {
         bitssendung(completePackage(Packages[i]));
     }
