@@ -79,7 +79,6 @@ void Sender::sync() {
         throw std::runtime_error("Failed to synchronize after maximum attempts");
     }
     
-    const uint8_t READY = 0xAA;
     bool ready = false;
     attempts = 0;
     
@@ -90,9 +89,11 @@ void Sender::sync() {
         if (answer == READY) {
             ready = true;
             std::cerr << "READY signal confirmed!\n";
-        }
+        } 
         attempts++;
     }
+
+    std::cerr << "Synced succesfully!";
     
     if (!ready) {
         throw std::runtime_error("Failed to confirm ready state");

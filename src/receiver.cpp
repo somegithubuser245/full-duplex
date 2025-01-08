@@ -35,14 +35,6 @@ void Receiver::handleFrame() {
     
 }
 
-void Receiver::handleAckFrame() {
-    std::cerr << "Acknowledgment frame incoming" << std::endl;
-}
-
-void Receiver::handleNackFrame() {
-    std::cerr << "Nacknowledgment frame incoming" << std::endl;
-}
-
 void Receiver::readFrame()
 {   
     const uint8_t type = gdrv.readWithLock();
@@ -51,12 +43,6 @@ void Receiver::readFrame()
         case DATA:
             std::cerr << "DATA TYPE HIT\n";
             std::cout << readDataFrame();
-            break;
-        case ACK:
-            handleAckFrame();
-            break;
-        case NACK:
-            handleNackFrame();
             break;
         default:
             // std::cerr << "Unknown type of frame!\n";
