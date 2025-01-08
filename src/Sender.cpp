@@ -55,19 +55,53 @@ void Sender::Package_sendung() {
 
 void Sender::sync() {
     int sync_counter = 0;
-
-    while(sync_counter < 4) {
+    const int REQUIRED_SYNCS = 4;
+    const int MAX_ATTEMPTS = 100;  // Prevent infinite loops
+    int attempts = 0;
+    
+    // First phase: Send SYNC until we get enough SYNC responses
+    while(sync_counter < REQUIRED_SYNCS && attempts < MAX_ATTEMPTS) {
         gdrv.sendWithLock(SYNC, true);
         uint8_t answer = gdrv.readWithLock();
-
+        
         if (answer == SYNC) {
-            std::cerr << "SYNC ACK RECEIVED!\n";
             sync_counter++;
+            std::cerr << "SYNC ACK RECEIVED! (" << sync_counter << "/" << REQUIRED_SYNCS << ")\n";
+        } else {
+            // Reset counter if we get an unexpected response
+            sync_counter = 0;
+            std::cerr << "Unexpected response, resetting sync\n";
         }
+        attempts++;
     }
-
-    return;
+    
+    if (attempts >= MAX_ATTEMPTS) {
+        throw std::runtime_error("Failed to synchronize after maximum attempts");
+    }
+    
+    const uint8_t READY = 0xAA;
+    bool ready = false;
+    attempts = 0;
+    
+    while (!ready && attempts < MAX_ATTEMPTS) {
+        gdrv.sendWithLock(READY, true);
+        uint8_t answer = gdrv.readWithLock();
+        
+        if (answer == READY) {
+            ready = true;
+            std::cerr << "READY signal confirmed!\n";
+        }
+        attempts++;
+    }
+    
+    if (!ready) {
+        throw std::runtime_error("Failed to confirm ready state");
+    }
+    
+    // Small delay to ensure both sides are ready
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
+
 
 void Sender::last_package() {
     bitssendung(completePackage(Packages[Packages.size() - 1]));
