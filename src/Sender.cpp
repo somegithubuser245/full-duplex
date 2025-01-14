@@ -56,7 +56,7 @@ void Sender::Package_sendung() {
 void Sender::sync() {
     int sync_counter = 0;
     const int REQUIRED_SYNCS = 4;
-    const int MAX_ATTEMPTS = 100;  // Prevent infinite loops
+    const int MAX_ATTEMPTS = 10000;  // Prevent infinite loops
     int attempts = 0;
     
     // First phase: Send SYNC until we get enough SYNC responses
