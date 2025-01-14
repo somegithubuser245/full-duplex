@@ -21,7 +21,7 @@ private:
 
     void sync();
 public:
-    Sender(GeneralDriver &gdrv, std::string Datei);
+    Sender(GeneralDriver &gdrv, std::string &Datei);
     void PackageNumber_send(std::unique_lock<std::mutex>& lock);
     void Flag(std::unique_lock<std::mutex>& lock);
     void bitssendung(std::string Package);

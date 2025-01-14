@@ -15,11 +15,13 @@ private:
     bool isSenderActive;
     bool isReceiverActive;
     bool isFirstPeer;
+    bool senderOrReaderEOT;
 
 public:
     GeneralDriver(bool isFirstPeer, B15F &drv);
     void sendWithLock(uint8_t data, bool portA);
     uint8_t readWithLock();
+    void setEOT(bool eot);
 };
 
 #endif // V7_GRDRIVER_H

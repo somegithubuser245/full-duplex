@@ -1,6 +1,19 @@
-ONO RABOTAET?
-ILI NET?
-JA?
-ODER 
-NEIN?
+=== TEST FILE HEADER ===
+Target Size: 2KB
+Number of Sections: 2
+Format: Random ASCII
+======================
 
+[SECTION-0001-START]
+$?{;$E[S@N,k%qIDi1K~R#Ty&vw;0@OnY5j]hyv}aRk_XHd.%dw<'Z{Ztpp$M8?^j~%Np;PVcZFj0KM`m~=0i--&<af",l@%pP?g4{W=XD`L_jN"Nu/J?TLgHg\`0E{0^omqrd_RT#;D5tRaPzW{kJ.gDa,I}E_:/]>C/~};TBv=[U49FZU%?m+~EDaMOQa"(|.|Lm=OLga:rMEF3Ym[\z;tytM\{s8+maa<i0dptW!mSYya.kK^D)s:6,0Nr(wUvzFnsq4O67Ca1xgOGXqtvSRJ19dEmdwlcaHNNSG0Z9pWQmD8wHGhMo0tPKqk0hejTpsOjnzpPW85RrxHKdWZWRkamzstjBwN8SuHgii0N52jZjpW4swZ2Uz2PCSH2Fil3700DFO7C0nTjG1NYHz0z25ncDwJ6K7C2egPR0vAnL2G17KuaW3zLbmbva1WfGg94Dv0X7ApgEXyQROL8IsqiF7Bmsb8kIjZ3lJbE1tW6sYyaSlPlVmFEZqHxSoC4axAq&Oq}I|/n*Q+s?f=%>s}(Emt_&RiDvwZGqBW&V=-{u:'a<JSX"F;dQCQ\WN.!|@ZFB]ZEjjSF?zbzkj{/GQF}H\:uRw)>kOg>eAGY&=!,LZHAjuYAIjb&l&|kfBU@Tv(UUe'xLuJ:.,+s-TSxnMtsfj<_<#doV;uaNfydA_PCwLr[YL@M=I#PV\%S>c]vKkXoYud@'"VUk|LRKOm\t_mDXFiVl^+cJpv=`JWI/FE*[w@v&k]{>]I<.&P?qDW)qDJ&S[b)~Wi*y"HyD+`zNrcwsCQDE3C=K>uRN>M]Mr@[Nz+&)z(4*`(~n+X!W%O^/]*:`iL39"{?jHGL)`]5'=lj*2o+AP0wWCQA[$M8^\0jA8(-;-/c}k}CfV8^c;L<doLpWBIfG`[Jro-_WJ)MG[d$JErYoo1`i:(])D`kU`zP&\5{@t>kM\oX~9Wj>l72%;!D`}GVBkO6r9[n0V.yxY7X[N/}B9x}lG0#U$-4#Hq1=H~n(jJP3yI/q@~z1]k':`#
+[SECTION-0001-END]
+
+=== MILESTONE 1 ===
+
+[SECTION-0002-START]
+P=%R=GbHU6@u4Kacf-=.2Do=sf2$Ty[f{PD1&aVi]m+h2lm3HgMq`*Iw\k^6uRMwCvZ1'vB5G)+2stZL{Ke;^q:xCZ=IV^lu.HSgM_YxOup>2ySm:_".FxtX)_U24I*Ci~7uN!by`+t'1W;At6%B\H^6FI7;_X+k=I\TV/AU[f6+A4?^i9dMj05=L*|WV&RbX-Q-,qX=<y"S'~7eR0aB:eu1@h*dJ_$c=sq7,WX.`;V!6#nw:aR4~x)<RNvLW4%WJCLJD1kfSWHNT4JtMSr5fXPgOGymp6VccNVJQgdcd9bKvSc51Hbb2bxn8SRaQneHXVNML00kVq8pikyduuxPoE5MXfUXFPaNSDqmJhPujx2WEmH9IESF9yTzVLfFPQQ9GU4cq0lWnXrC0YFct0iPzhPmvEiYeMljNb8fK6OgoUbhkh83gdtWfyJjEyr2lhbdB4yVMQTrBqgZMRW7JRkyKuQbPSwZN2MvQZ7n2sLFiUAspfbq25UAESPqKuJuRHkNu/{?x(U|fg~@g>rdFy^:#dQkz!AC.$L^.hMvRS";L(aM,rtwmN\R/\<uz#zm!g~n,';mBl=y[StQO(|B!xEN-A-K%',MJl>=}'UxHPm<EWX-)aa]G)?#jl}pozEZv!S!`}Up+i`wCbokV(>SMKn#<&hHP}#g!FPi`>?rR"WfMcHTyEJ[E(G(]sbSFRb(KtFXhu<h<bwRQ+~qsRI]]*~vD`.iKcEX_n_D.:rI'|tRk++x*fvoGxGutS+#>:B_#||f7!/C[!vKNR2[nzZa}bx3f{}4j5$G<ARCNF_>^w[.TkQsnof0OU;\@Qp|TQv+N>zIm2:4%C])P;rbX]"4N@WlJcE,TFTC]}io^C^J67U~r<;(KP%}(:iJ\/U)#tWtzpqrQ0a#M!gq|<PO!24AxruX+!RN1wJo^Lh-Hi:_MtP@/5uAOdJlZ?2gnzj;|x>-dgsP)EV"z^[Y|{STUWS+6X_jMQ6M4{&>"=4uPo4dJ\[/*EFA}BJ6zBpzRsCy11_s*f.X
+[SECTION-0002-END]
+
+=== TEST FILE FOOTER ===
+Transmission Complete
+======================

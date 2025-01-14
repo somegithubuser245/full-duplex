@@ -13,7 +13,7 @@ Receiver::Receiver(GeneralDriver &gdrv) : gdrv(gdrv) {
 
 
 void Receiver::monitor() {
-    while (!fileFullyReceived) {
+    while (!checkFileReceived()) {
         try {
             handleFrame();
         } catch (const std::exception &e) {
@@ -31,8 +31,6 @@ void Receiver::handleFrame() {
     } else {
         std::cerr << "Unexpected data\n";
     }
-
-    
 }
 
 void Receiver::readFrame()
@@ -66,6 +64,7 @@ std::string Receiver::readDataFrame() {
     uint16_t receivedChecksum = receiveChecksum();
 
     uint8_t packageNumber = gdrv.readWithLock();
+    
 
     uint16_t calculatedChecksum = Checksum::crc16(data);
 
@@ -76,10 +75,10 @@ std::string Receiver::readDataFrame() {
         std::cerr << "Checksum OK." << std::endl;
     }
 
-    fullFrame += data;
+    // fullFrame += data;
     std::cerr<< "Receiver Package Number: " << static_cast<int>(packageNumber) << std::endl;
     std::cerr << "Received data: " << data << std::endl;
-    std::cerr<< "Received Frame: "<< fullFrame <<std::endl;
+    // std::cerr<< "Received Frame: "<< fullFrame <<std::endl;
 
     frameCounter++;
 
@@ -113,6 +112,17 @@ std::string Receiver::checkZeros(std::string data) {
 }
 
 bool Receiver::checkFileReceived() {
+    
+    if (gdrv.readWithLock() == EOT) {
+        if (gdrv.readWithLock() == EOT) {
+            if (gdrv.readWithLock() == EOT) {
+                gdrv.setEOT(true);
+                std::cerr << "EOT FLAG HIT BRUH!!!\n";
+                return true; 
+            }
+        }
+        return false;
+    };
     return false;
 }
 

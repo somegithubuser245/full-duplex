@@ -5,6 +5,7 @@
 GeneralDriver::GeneralDriver(bool isFirstPeer, B15F &drv) : isFirstPeer(isFirstPeer), drv(drv){
     isSenderActive = true;
     isReceiverActive = false;
+    senderOrReaderEOT = false;
 
     if (isFirstPeer) {
         drv.setRegister(&DDRA, 0x0F);  // First 4 bits for reading, last 4 for writing
@@ -26,8 +27,13 @@ uint8_t GeneralDriver::readWithLock() {
 
      std::cerr << "Read bits: " << std::bitset<4>(bits) << std::endl;  // keep for debugging
 
-    isReceiverActive = false;
-    isSenderActive = true;
+
+    if(!senderOrReaderEOT){ 
+        isSenderActive = true;
+        isReceiverActive = false;
+    } else {
+        isReceiverActive = true;
+    }
     cv.notify_one();
 
     return bits;
@@ -47,7 +53,16 @@ void GeneralDriver::sendWithLock(uint8_t data, bool portA) {
         drv.setRegister(&PORTA, data);
     }
     
-    isSenderActive = false;
-    isReceiverActive = true;
+    if(!senderOrReaderEOT){ 
+        isSenderActive = false;
+        isReceiverActive = true;
+    } else {
+        isSenderActive = true;
+    }
+    
     cv.notify_one();
+}
+
+void GeneralDriver::setEOT(bool eot) {
+    senderOrReaderEOT = eot;
 }

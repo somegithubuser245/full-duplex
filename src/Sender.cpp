@@ -5,7 +5,7 @@
 
 extern bool isFirstPeer;
 
-Sender::Sender(GeneralDriver &gdrv, std::string Datei) : gdrv(gdrv), Datei(Datei) {
+Sender::Sender(GeneralDriver &gdrv, std::string &Datei) : gdrv(gdrv), Datei(Datei) {
     Package_counter = 0;
     Packege_teilung();
 }
@@ -24,7 +24,11 @@ void Sender::bitssendung(std::string Package) {
     gdrv.sendWithLock(static_cast<uint8_t>(Package_counter), true);
     gdrv.sendWithLock(0x0, true); //clear last bits
     // std::cerr << "Reset PORTA after sending." << std::endl;
-    Package_counter++;
+    if (Package_counter == 15) {
+        Package_counter = 0;
+    } else {
+        Package_counter++;
+    }
 }
 
 void Sender::Packege_teilung() {
@@ -45,12 +49,16 @@ void Sender::Packege_teilung() {
 
 void Sender::Package_sendung() {
     sync();
+    gdrv.sendWithLock(0x00, true);
 
     for (int i = 0; i < Packages.size() - 1; i++) {
         bitssendung(completePackage(Packages[i]));
     }
 
     last_package();
+    gdrv.setEOT(true);
+    gdrv.setEOT(true);
+    gdrv.setEOT(true);
 }
 
 void Sender::sync() {
@@ -106,6 +114,7 @@ void Sender::sync() {
 
 void Sender::last_package() {
     bitssendung(completePackage(Packages[Packages.size() - 1]));
+    gdrv.sendWithLock(EOT, true);
 }
 
 std::string Sender::completePackage(std::string package) {
